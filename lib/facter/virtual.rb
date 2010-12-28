@@ -1,4 +1,4 @@
-require 'facter/util/virtual'
+        require 'facter/util/virtual'
 
 Facter.add("virtual") do
     confine :kernel => %w{Linux FreeBSD OpenBSD SunOS HP-UX}
@@ -45,6 +45,10 @@ Facter.add("virtual") do
         if Facter.value(:kernel)=="FreeBSD"
             result = "jail" if Facter::Util::Virtual.jail?
         end
+        
+        if Facter.value(:architecture)=="s390x"
+            result = "zlinux" 
+        end
 
         if result == "physical"
             output = Facter::Util::Resolution.exec('lspci')
@@ -84,7 +88,7 @@ Facter.add("is_virtual") do
 
     setcode do
         case Facter.value(:virtual)
-        when "xenu", "openvzve", "vmware", "kvm", "vserver", "jail", "zone", "hpvm"
+        when "xenu", "openvzve", "vmware", "kvm", "vserver", "jail", "zone", "hpvm", "zlinux"
             "true"
         else 
             "false"
